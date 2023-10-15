@@ -10,20 +10,17 @@
 </head>
 <body>
     <div id="root">
-        <div id="input_box">
-        <h1>제목</h1>
-        <form id="form" action="#">
-            <input required id="comment" type="text" name="comment">
-            <button id="button" type="submit">등록</button>
-        </form>
+        <div id="container">
+            <div id="input_box">
+                <p class="count"> Comments</p>
+                <form id="form" action="#">
+                    <input required id="comment" type="text" name="comment" placeholder="Say something special!">
+                    <button id="button" type="submit">Write</button>
+                </form>
+            </div>
+                <ul id="comment_list">
+                </ul>
         </div>
-
-        <ul id="comment_list">
-            <li>ID</li>
-            <li>CONTENT</li>
-            <li>DATE</li>
-            <button id="delete">X</button>
-        </ul>
     </div>
     
 </body>

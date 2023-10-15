@@ -13,7 +13,7 @@ form.addEventListener('submit', (e) => {
     lastID++;
     console.log("Submitted: ", lastID);
 
-    const date = new Date().toISOString();
+    const date = new Date().toLocaleDateString();
     const comment = document.getElementById('comment').value;
     const row = { id: lastID, content: comment, date };
 
@@ -25,7 +25,16 @@ form.addEventListener('submit', (e) => {
     form.reset();
 });
 
+function counter() {
+    const count = document.querySelector('.count')
+    const many = localStorage.length ? localStorage.length - 1 : 0 
+    count.innerHTML = `${many} Comments`
+}
+
 function renderComments() {
+    // Count the number of comments
+    counter()
+
     let loop_end = parseInt(localStorage.getItem('lastID'), 10) || 0;
     const target = document.querySelector("#comment_list");
     target.innerHTML = ""; // Clear existing comments
@@ -37,8 +46,8 @@ function renderComments() {
         <li class="comment_row">
             <span class="id">${picked.id}</span>
             <span class="content">${picked.content}</span>
-            <span>${picked.date}</span>
-            <button class="delete">X</button>
+            <span class="date">${picked.date}</span>
+            <button class="delete">Delete</button>
         </li>`;
         target.innerHTML += template;
     }
@@ -54,7 +63,7 @@ function renderComments() {
     });
 
     // Edit Operation
-    document.querySelectorAll('.content').forEach((elem, idx) => {
+    document.querySelectorAll('.content').forEach((elem) => {
         elem.addEventListener("click", (e) => {
             const oldContent = e.target.innerHTML;
             const idElem = e.target.closest('.comment_row').querySelector('.id');
@@ -62,13 +71,18 @@ function renderComments() {
             
             // Convert to an input box
             e.target.outerHTML = `
-            <input type="text" class="editing" value="${oldContent}" />
+            <form class="modify_form" action="#">
+            <input placeholder="Your comment goes here" type="text" class="editing" value="${oldContent}" />
+            <button class="modify_button">Modify</button>
+            </form>
             `;
 
             const inputElem = document.querySelector('.editing');
+            const modify_form = document.querySelector('.modify_form')
 
-            inputElem.addEventListener('blur', () => {
+            modify_form.addEventListener('submit', (e) => {
                 // Update the content
+                e.preventDefault();
                 const newContent = inputElem.value;
                 const row = JSON.parse(localStorage.getItem(id));
                 row.content = newContent;
